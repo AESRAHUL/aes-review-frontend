@@ -1,153 +1,135 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>AES Review Generator</title>
+  <title>AES HOME APPLIANCE REPAIR AND SERVICE EXPERT</title>
   <style>
     body {
       font-family: Arial, sans-serif;
+      background: #e6f0ff;
       padding: 20px;
-      background: #f2f6fc;
-      color: #333;
       text-align: center;
     }
-
-    .container {
-      max-width: 600px;
-      margin: auto;
-      background: #fff;
-      padding: 30px;
-      box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-      border-radius: 12px;
-    }
-
     h1 {
-      color: #2c3e50;
-      margin-bottom: 10px;
+      color: #003366;
+      font-size: 32px;
     }
-
     h2 {
-      color: #2980b9;
-      margin-top: 0;
+      color: #336699;
       margin-bottom: 30px;
     }
-
-    label {
-      font-weight: bold;
-      text-align: left;
-      display: block;
-      margin-top: 15px;
-    }
-
-    select, input, textarea, button {
-      width: 100%;
+    select, button, textarea, input {
+      margin: 10px 0;
       padding: 12px;
-      margin-top: 8px;
-      margin-bottom: 15px;
-      border-radius: 6px;
-      border: 1px solid #ccc;
+      width: 90%;
+      max-width: 500px;
+      display: block;
+      margin-left: auto;
+      margin-right: auto;
       font-size: 16px;
+      border-radius: 8px;
+      border: 1px solid #ccc;
     }
-
     textarea {
       height: 150px;
       resize: none;
     }
-
     button {
-      background-color: #2980b9;
+      background-color: #003366;
       color: white;
       border: none;
       cursor: pointer;
       font-weight: bold;
     }
-
     button:hover {
-      background-color: #1f6690;
+      background-color: #0059b3;
     }
-
-    .green-button {
-      background-color: green;
+    .loader {
+      display: none;
+      margin: 10px auto;
+      border: 6px solid #f3f3f3;
+      border-radius: 50%;
+      border-top: 6px solid #003366;
+      width: 40px;
+      height: 40px;
+      animation: spin 1s linear infinite;
     }
-
-    .green-button:hover {
-      background-color: darkgreen;
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <h1>AES HOME APPLIANCE REPAIR AND SERVICE EXPERT</h1>
-    <h2>Review Generation</h2>
+  <h1>AES HOME APPLIANCE REPAIR AND SERVICE EXPERT</h1>
+  <h2>Review Generation</h2>
 
-    <label for="nameInput">Your Name:</label>
-    <input type="text" id="nameInput" placeholder="Enter your name" />
+  <label for="languageSelect">Language:</label>
+  <select id="languageSelect">
+    <option value="English" selected>English</option>
+    <option value="Hindi">हिंदी</option>
+  </select>
 
-    <label for="serviceSelect">Choose a Service:</label>
-    <select id="serviceSelect">
-      <option value="AC">AC</option>
-      <option value="Fridge">Fridge</option>
-      <option value="Washing Machine">Washing Machine</option>
-      <option value="Kitchen Chimney">Kitchen Chimney</option>
-      <option value="RO">RO</option>
-      <option value="Microwave Oven">Microwave Oven</option>
-      <option value="Ceiling Fan">Ceiling Fan</option>
-      <option value="Mixer Grinder">Mixer Grinder</option>
-      <option value="Water Motor">Water Motor</option>
-      <option value="TV">TV</option>
-      <option value="Cooler">Cooler</option>
-    </select>
+  <label for="nameInput">Your Name:</label>
+  <input type="text" id="nameInput" placeholder="Enter your name" />
 
-    <label for="languageSelect">Select Language:</label>
-    <select id="languageSelect">
-      <option value="English" selected>English</option>
-      <option value="Hindi">Hindi</option>
-    </select>
+  <label for="serviceSelect">Choose a Service:</label>
+  <select id="serviceSelect">
+    <option value="AC">AC</option>
+    <option value="Fridge">Fridge</option>
+    <option value="Washing Machine">Washing Machine</option>
+    <option value="Kitchen Chimney">Kitchen Chimney</option>
+    <option value="RO">RO</option>
+    <option value="Microwave Oven">Microwave Oven</option>
+    <option value="Ceiling Fan">Ceiling Fan</option>
+    <option value="Mixer Grinder">Mixer Grinder</option>
+    <option value="Water Motor">Water Motor</option>
+    <option value="TV">TV</option>
+    <option value="Cooler">Cooler</option>
+  </select>
 
-    <button onclick="generateReview()">Generate Review</button>
+  <button onclick="generateReview()">Generate Review with AI</button>
 
-    <textarea id="reviewBox" readonly placeholder="Your AI-generated review will appear here..."></textarea>
+  <div class="loader" id="loader"></div>
 
-    <button onclick="copyReview()">Copy Review</button>
+  <textarea id="reviewBox" readonly placeholder="Your AI-generated review will appear here..."></textarea>
+  <button onclick="copyReview()">Copy Review</button>
 
-    <a href="https://g.page/r/CftxxWmTeF7gEBE/review" target="_blank">
-      <button class="green-button">Give Us a Google Review</button>
-    </a>
-  </div>
+  <a href="https://g.page/r/CftxxWmTeF7gEBE/review" target="_blank">
+    <button style="background-color: green; color: white;">Give Us a Google Review</button>
+  </a>
 
   <script>
     async function generateReview() {
-      const name = document.getElementById('nameInput').value.trim();
+      const name = document.getElementById('nameInput').value;
       const service = document.getElementById('serviceSelect').value;
       const language = document.getElementById('languageSelect').value;
+      const loader = document.getElementById('loader');
+      const reviewBox = document.getElementById('reviewBox');
 
-      if (!name) {
-        alert("Please enter your name.");
+      if (!name || !service) {
+        alert("Please enter your name and select a service.");
         return;
       }
 
-      let prompt = '';
-
-      if (language === "Hindi") {
-        prompt = `कृपया एक 5-स्टार Google रिव्यू हिंदी में लिखें। मेरा नाम ${name} है। मैंने हाल ही में ${service} सेवा प्राप्त की और मैं बहुत संतुष्ट हूँ।`;
-      } else {
-        prompt = `Please write a 5-star Google review in English. My name is ${name}. I recently received ${service} service and I am very satisfied.`;
-      }
+      loader.style.display = 'block';
+      reviewBox.value = "";
 
       const response = await fetch("https://aes-review-backend.onrender.com/generate-review", {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ prompt })
+        body: JSON.stringify({ name, service, language })
       });
 
       const data = await response.json();
+      loader.style.display = 'none';
 
       if (response.ok) {
-        document.getElementById('reviewBox').value = data.review;
+        reviewBox.value = data.review;
       } else {
-        alert("Error: " + (data.error || "Something went wrong"));
-        console.error(data);
+        alert("Error: " + (data.error || "Something went wrong!"));
       }
     }
 
