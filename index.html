@@ -1,0 +1,88 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>AES Review Generator</title>
+  <style>
+    body { font-family: Arial; padding: 20px; background: #f4f4f4; }
+    select, button, textarea, input { margin: 10px 0; padding: 10px; width: 100%; max-width: 500px; display: block; }
+    textarea { height: 150px; resize: none; }
+    label { font-weight: bold; }
+  </style>
+</head>
+<body>
+  <h2>Service Review Generator</h2>
+
+  <label for="languageSelect">Language:</label>
+  <select id="languageSelect">
+    <option value="english">English</option>
+    <option value="hindi">हिंदी</option>
+  </select>
+
+  <label for="nameInput">Your Name:</label>
+  <input type="text" id="nameInput" placeholder="Enter your name" />
+
+  <label for="ratingInput">Star Rating (1-5):</label>
+  <input type="number" id="ratingInput" min="1" max="5" placeholder="5" />
+
+  <label for="dateInput">Service Date:</label>
+  <input type="date" id="dateInput" />
+
+  <label for="technicianInput">Technician Name:</label>
+  <input type="text" id="technicianInput" placeholder="Technician's name" />
+
+  <label for="serviceSelect">Choose a Service:</label>
+  <select id="serviceSelect">
+    <option value="AC">AC</option>
+    <option value="Fridge">Fridge</option>
+    <option value="Washing Machine">Washing Machine</option>
+    <option value="Kitchen Chimney">Kitchen Chimney</option>
+    <option value="RO">RO</option>
+    <option value="Microwave Oven">Microwave Oven</option>
+    <option value="Ceiling Fan">Ceiling Fan</option>
+    <option value="Mixer Grinder">Mixer Grinder</option>
+    <option value="Water Motor">Water Motor</option>
+    <option value="TV">TV</option>
+    <option value="Cooler">Cooler</option>
+  </select>
+
+  <button onclick="generateReview()">Generate Review with AI</button>
+
+  <textarea id="reviewBox" readonly placeholder="Your AI-generated review will appear here..."></textarea>
+  <button onclick="copyReview()">Copy Review</button>
+
+  <br/>
+  <a href="https://g.page/r/Cfxyz12345/review" target="_blank">
+    <button style="background-color: green; color: white;">Give Us a Google Review</button>
+  </a>
+
+  <script>
+    async function generateReview() {
+      const service = document.getElementById('serviceSelect').value;
+      const name = document.getElementById('nameInput').value;
+      const rating = document.getElementById('ratingInput').value;
+      const date = document.getElementById('dateInput').value;
+      const technician = document.getElementById('technicianInput').value;
+      const language = document.getElementById('languageSelect').value;
+
+      const response = await fetch('https://your-backend-url.onrender.com/generate-review', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ service, name, rating, date, technician, language })
+      });
+
+      const data = await response.json();
+      document.getElementById('reviewBox').value = data.review;
+    }
+
+    function copyReview() {
+      const reviewBox = document.getElementById('reviewBox');
+      reviewBox.select();
+      document.execCommand('copy');
+      alert("Review copied!");
+    }
+  </script>
+</body>
+</html>
