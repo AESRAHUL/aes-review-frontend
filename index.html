@@ -68,7 +68,7 @@
       const language = document.getElementById('languageSelect').value;
 
       if (!service || !name || !rating || !date || !technician || !language) {
-        alert("Please fill in all fields.");
+        alert("Please fill in all fields before generating the review.");
         return;
       }
 
@@ -79,16 +79,16 @@
           body: JSON.stringify({ service, name, rating, date, technician, language })
         });
 
-        const data = await response.json();
-
         if (!response.ok) {
-          throw new Error(data.error || "Failed to generate review.");
+          const errorData = await response.json();
+          alert("Error: " + (errorData.error || "Failed to generate review."));
+          return;
         }
 
+        const data = await response.json();
         document.getElementById('reviewBox').value = data.review;
-      } catch (err) {
-        alert("Error: " + err.message);
-        console.error(err);
+      } catch (error) {
+        alert("Something went wrong: " + error.message);
       }
     }
 
