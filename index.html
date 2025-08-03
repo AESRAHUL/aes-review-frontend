@@ -1,35 +1,30 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>AES HOME APPLIANCE REPAIR AND SERVICE EXPERT</title>
+  <title>AES Review Generator</title>
   <style>
     body {
       font-family: Arial, sans-serif;
-      background: #e6f0ff;
       padding: 20px;
+      background: #f0f8ff;
       text-align: center;
     }
     h1 {
-      color: #003366;
-      font-size: 32px;
+      margin-bottom: 5px;
     }
-    h2 {
-      color: #336699;
-      margin-bottom: 30px;
+    h3 {
+      margin-top: 0;
+      color: #333;
     }
     select, button, textarea, input {
-      margin: 10px 0;
-      padding: 12px;
+      margin: 10px auto;
+      padding: 10px;
       width: 90%;
       max-width: 500px;
       display: block;
-      margin-left: auto;
-      margin-right: auto;
-      font-size: 16px;
-      border-radius: 8px;
+      border-radius: 5px;
       border: 1px solid #ccc;
     }
     textarea {
@@ -37,24 +32,26 @@
       resize: none;
     }
     button {
-      background-color: #003366;
+      background-color: #007bff;
       color: white;
-      border: none;
-      cursor: pointer;
       font-weight: bold;
+      cursor: pointer;
     }
     button:hover {
-      background-color: #0059b3;
+      background-color: #0056b3;
     }
-    .loader {
+    #spinner {
       display: none;
-      margin: 10px auto;
+      margin: 20px auto;
+    }
+    .spinner {
       border: 6px solid #f3f3f3;
+      border-top: 6px solid #007bff;
       border-radius: 50%;
-      border-top: 6px solid #003366;
       width: 40px;
       height: 40px;
       animation: spin 1s linear infinite;
+      margin: auto;
     }
     @keyframes spin {
       0% { transform: rotate(0deg); }
@@ -64,16 +61,16 @@
 </head>
 <body>
   <h1>AES HOME APPLIANCE REPAIR AND SERVICE EXPERT</h1>
-  <h2>Review Generation</h2>
-
-  <label for="languageSelect">Language:</label>
-  <select id="languageSelect">
-    <option value="English" selected>English</option>
-    <option value="Hindi">हिंदी</option>
-  </select>
+  <h3>Review Generation</h3>
 
   <label for="nameInput">Your Name:</label>
   <input type="text" id="nameInput" placeholder="Enter your name" />
+
+  <label for="languageSelect">Language:</label>
+  <select id="languageSelect">
+    <option value="english" selected>English</option>
+    <option value="hindi">हिंदी</option>
+  </select>
 
   <label for="serviceSelect">Choose a Service:</label>
   <select id="serviceSelect">
@@ -92,44 +89,40 @@
 
   <button onclick="generateReview()">Generate Review with AI</button>
 
-  <div class="loader" id="loader"></div>
+  <div id="spinner"><div class="spinner"></div></div>
 
   <textarea id="reviewBox" readonly placeholder="Your AI-generated review will appear here..."></textarea>
+
   <button onclick="copyReview()">Copy Review</button>
 
   <a href="https://g.page/r/CftxxWmTeF7gEBE/review" target="_blank">
-    <button style="background-color: green; color: white;">Give Us a Google Review</button>
+    <button style="background-color: green;">Give Us a Google Review</button>
   </a>
 
   <script>
     async function generateReview() {
-      const name = document.getElementById('nameInput').value;
       const service = document.getElementById('serviceSelect').value;
+      const name = document.getElementById('nameInput').value;
       const language = document.getElementById('languageSelect').value;
-      const loader = document.getElementById('loader');
-      const reviewBox = document.getElementById('reviewBox');
 
-      if (!name || !service) {
-        alert("Please enter your name and select a service.");
-        return;
-      }
-
-      loader.style.display = 'block';
+      const spinner = document.getElementById("spinner");
+      const reviewBox = document.getElementById("reviewBox");
       reviewBox.value = "";
+      spinner.style.display = "block";
 
-      const response = await fetch("https://aes-review-backend.onrender.com/generate-review", {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ name, service, language })
-      });
+      try {
+        const response = await fetch("https://aes-review-backend.onrender.com/generate-review", {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ service, name, language })
+        });
 
-      const data = await response.json();
-      loader.style.display = 'none';
-
-      if (response.ok) {
-        reviewBox.value = data.review;
-      } else {
-        alert("Error: " + (data.error || "Something went wrong!"));
+        const data = await response.json();
+        reviewBox.value = data.review || "No review received.";
+      } catch (error) {
+        reviewBox.value = "Error generating review.";
+      } finally {
+        spinner.style.display = "none";
       }
     }
 
