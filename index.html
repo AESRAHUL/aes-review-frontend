@@ -7,60 +7,55 @@
   <style>
     body {
       font-family: 'Segoe UI', sans-serif;
-      background: linear-gradient(135deg, #f0f4f8, #d9e2ec);
-      text-align: center;
-      padding: 30px;
+      background-color: #f7f9fc;
       margin: 0;
+      padding: 0;
+      text-align: center;
     }
-    .container {
-      max-width: 500px;
-      margin: auto;
-      background: white;
-      padding: 25px;
-      border-radius: 10px;
-      box-shadow: 0 0 20px rgba(0,0,0,0.1);
+    header {
+      background-color: #003366;
+      color: white;
+      padding: 20px 10px;
     }
-    .logo {
-      width: 100px;
+    header img {
+      width: 120px;
+      height: auto;
       margin-bottom: 10px;
     }
     h1 {
-      margin: 5px 0;
+      margin: 10px 0 5px;
       font-size: 22px;
-      color: #333;
     }
     h2 {
+      margin: 5px 0 20px;
       font-size: 18px;
-      margin-top: 5px;
-      color: #666;
     }
-    select, input, button, textarea {
+    .container {
+      padding: 20px;
+      max-width: 500px;
+      margin: auto;
+    }
+    select, input, textarea, button {
       width: 100%;
-      padding: 10px;
-      margin: 12px 0;
+      padding: 12px;
+      margin: 10px 0;
       font-size: 16px;
       border-radius: 5px;
       border: 1px solid #ccc;
-      box-sizing: border-box;
     }
     button {
-      background-color: #007bff;
+      background-color: #0055a5;
       color: white;
-      border: none;
       cursor: pointer;
     }
     button:hover {
-      background-color: #0056b3;
-    }
-    textarea {
-      resize: none;
-      height: 150px;
+      background-color: #004080;
     }
     .loader {
       display: none;
       margin: 10px auto;
       border: 6px solid #f3f3f3;
-      border-top: 6px solid #007bff;
+      border-top: 6px solid #3498db;
       border-radius: 50%;
       width: 40px;
       height: 40px;
@@ -70,27 +65,25 @@
       0% { transform: rotate(0deg); }
       100% { transform: rotate(360deg); }
     }
-    @media (max-width: 600px) {
-      .container { padding: 15px; }
-      .logo { width: 80px; }
+    .note {
+      font-size: 14px;
+      color: #444;
+      margin-top: -5px;
     }
   </style>
 </head>
 <body>
-  <div class="container">
-    <!-- Logo -->
-    <img class="logo" src="your-logo.png" alt="AES Logo" />
-
-    <!-- Header -->
+  <header>
+    <img src="https://raw.githubusercontent.com/AESRAHUL/aes-review-frontend/main/logo/AES-Logo.jpg" alt="AES Logo" />
     <h1>AES HOME APPLIANCE REPAIR AND SERVICE EXPERT</h1>
     <h2>REVIEW GENERATION</h2>
+  </header>
 
-    <!-- Name input -->
+  <div class="container">
     <input type="text" id="nameInput" placeholder="Enter your name" />
 
-    <!-- Service selection -->
+    <label for="serviceSelect">Choose a Service:</label>
     <select id="serviceSelect">
-      <option value="">Select a service</option>
       <option value="AC">AC</option>
       <option value="Fridge">Fridge</option>
       <option value="Washing Machine">Washing Machine</option>
@@ -104,28 +97,25 @@
       <option value="Cooler">Cooler</option>
     </select>
 
-    <!-- Language selector -->
+    <label for="languageSelect">Select Language:</label>
     <select id="languageSelect">
       <option value="english" selected>English</option>
       <option value="hindi">हिंदी</option>
     </select>
 
-    <!-- Generate button -->
     <button onclick="generateReview()">Generate Review with AI</button>
 
-    <!-- Loader -->
     <div class="loader" id="loader"></div>
 
-    <!-- Review output -->
     <textarea id="reviewBox" readonly placeholder="Your AI-generated review will appear here..."></textarea>
 
-    <!-- Copy button -->
     <button onclick="copyReview()">Copy Review</button>
 
-    <!-- Google Review link -->
     <a href="https://g.page/r/CftxxWmTeF7gEBE/review" target="_blank">
       <button style="background-color: green; color: white;">Give Us a Google Review</button>
     </a>
+
+    <p class="note">📋 Review copied! Please <strong>paste (Ctrl + V)</strong> it on the next page and submit.</p>
   </div>
 
   <script>
@@ -141,7 +131,7 @@
         return;
       }
 
-      loader.style.display = "block";
+      loader.style.display = 'block';
       reviewBox.value = "";
 
       try {
@@ -151,14 +141,18 @@
           body: JSON.stringify({ name, service, language })
         });
 
-        if (!response.ok) throw new Error("Failed to generate review");
         const data = await response.json();
-        reviewBox.value = data.review;
-      } catch (err) {
-        reviewBox.value = "Error generating review.";
-      } finally {
-        loader.style.display = "none";
+
+        if (data.review) {
+          reviewBox.value = data.review;
+        } else {
+          reviewBox.value = "Error generating review.";
+        }
+      } catch (error) {
+        reviewBox.value = "Failed to fetch review.";
       }
+
+      loader.style.display = 'none';
     }
 
     function copyReview() {
