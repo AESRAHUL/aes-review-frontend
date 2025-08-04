@@ -70,30 +70,25 @@
       0% { transform: rotate(0deg); }
       100% { transform: rotate(360deg); }
     }
-
     @media (max-width: 600px) {
-      .container {
-        padding: 15px;
-      }
-      .logo {
-        width: 80px;
-      }
+      .container { padding: 15px; }
+      .logo { width: 80px; }
     }
   </style>
 </head>
 <body>
   <div class="container">
-    <!-- ✅ Company Logo -->
-    <img class="logo" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIwAAACM..." alt="AES Logo">
+    <!-- Logo -->
+    <img class="logo" src="your-logo.png" alt="AES Logo" />
 
-    <!-- ✅ Titles -->
+    <!-- Header -->
     <h1>AES HOME APPLIANCE REPAIR AND SERVICE EXPERT</h1>
     <h2>REVIEW GENERATION</h2>
 
-    <!-- ✅ Name input -->
+    <!-- Name input -->
     <input type="text" id="nameInput" placeholder="Enter your name" />
 
-    <!-- ✅ Service selection -->
+    <!-- Service selection -->
     <select id="serviceSelect">
       <option value="">Select a service</option>
       <option value="AC">AC</option>
@@ -109,25 +104,25 @@
       <option value="Cooler">Cooler</option>
     </select>
 
-    <!-- ✅ Language selector -->
+    <!-- Language selector -->
     <select id="languageSelect">
       <option value="english" selected>English</option>
       <option value="hindi">हिंदी</option>
     </select>
 
-    <!-- ✅ Generate Review Button -->
+    <!-- Generate button -->
     <button onclick="generateReview()">Generate Review with AI</button>
 
-    <!-- ✅ Loading Spinner -->
+    <!-- Loader -->
     <div class="loader" id="loader"></div>
 
-    <!-- ✅ Review Output -->
+    <!-- Review output -->
     <textarea id="reviewBox" readonly placeholder="Your AI-generated review will appear here..."></textarea>
 
-    <!-- ✅ Copy Button -->
+    <!-- Copy button -->
     <button onclick="copyReview()">Copy Review</button>
 
-    <!-- ✅ Google Review Link -->
+    <!-- Google Review link -->
     <a href="https://g.page/r/CftxxWmTeF7gEBE/review" target="_blank">
       <button style="background-color: green; color: white;">Give Us a Google Review</button>
     </a>
@@ -156,14 +151,11 @@
           body: JSON.stringify({ name, service, language })
         });
 
-        if (!response.ok) {
-          throw new Error("Server returned error");
-        }
-
+        if (!response.ok) throw new Error("Failed to generate review");
         const data = await response.json();
         reviewBox.value = data.review;
-      } catch (error) {
-        reviewBox.value = "Error generating review. Please try again.";
+      } catch (err) {
+        reviewBox.value = "Error generating review.";
       } finally {
         loader.style.display = "none";
       }
